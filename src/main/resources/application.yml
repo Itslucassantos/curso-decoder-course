@@ -1,0 +1,18 @@
+server:
+  port: 8082
+
+spring:
+  datasource:
+    url: 'jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:ead_course}'
+    username: ${DATABASE_USER:bemindersuser}
+    password: ${DATABASE_PASSWORD:beminders}
+  jpa:
+    hibernate:
+      # cria as tabelas no banco automaticamente
+      ddl-auto: update
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+      jdbc:
+        lob.non-contextual-creation: true
+    properties:
+      hibernate:
+        show_sql: true
