@@ -1,5 +1,6 @@
 package com.ead.course.services.impl;
 
+import com.ead.course.clients.AuthUserClient;
 import com.ead.course.models.CourseModel;
 import com.ead.course.models.CourseUserModel;
 import com.ead.course.models.LessonModel;
@@ -27,19 +28,22 @@ public class CourseServiceImpl implements CourseService {
     private final ModuleRepository moduleRepository;
     private final LessonRepository lessonRepository;
     private final CourseUserRepository courseUserRepository;
+    private final AuthUserClient authUserClient;
 
     @Autowired
-    public CourseServiceImpl(CourseRepository courseRepository, ModuleRepository moduleRepository, LessonRepository lessonRepository, CourseUserRepository courseUserRepository) {
+    public CourseServiceImpl(CourseRepository courseRepository, ModuleRepository moduleRepository, LessonRepository lessonRepository, CourseUserRepository courseUserRepository, AuthUserClient authUserClient) {
         this.courseRepository = courseRepository;
         this.moduleRepository = moduleRepository;
         this.lessonRepository = lessonRepository;
         this.courseUserRepository = courseUserRepository;
+        this.authUserClient = authUserClient;
     }
 
     // para fazer tudo dentro de uma transação e se algo der errado os dados não é perdido.
     @Transactional
     @Override
     public void delete(CourseModel courseModel) {
+        boolean deleteCourseUserInAuthUser = false;
         // deleta em cascata -> vincula o curso e todos os modules e as lessons e deleta em cascata, ou seja, todos juntos.
         List<ModuleModel> moduleModelList = this.moduleRepository.findAllModulesIntoCourse(courseModel.getCourseId());
         if (!moduleModelList.isEmpty()) {
@@ -54,8 +58,14 @@ public class CourseServiceImpl implements CourseService {
         List<CourseUserModel> courseUserModelList = this.courseUserRepository.findAllCourseUserIntoCourse(courseModel.getCourseId());
         if(!courseUserModelList.isEmpty()) {
             this.courseUserRepository.deleteAll(courseUserModelList);
+            deleteCourseUserInAuthUser = true;
         }
         this.courseRepository.delete(courseModel);
+        /*Atenção*/
+        if(deleteCourseUserInAuthUser) {
+            this.authUserClient.deleteCourseInAuthUser(courseModel.getCourseId());
+
+        }
     }
 
     @Override
