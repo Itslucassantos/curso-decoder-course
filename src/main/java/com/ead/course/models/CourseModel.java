@@ -37,7 +37,6 @@ public class CourseModel implements Serializable {
     private String imageUrl;
 
     @Column(nullable = false)
-    //Padrão ISO 8601 UTC
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime creationDate;
 
@@ -56,24 +55,9 @@ public class CourseModel implements Serializable {
     @Column(nullable = false)
     private UUID userInstructor;
 
-    // para definir o tipo de acesso na serialização, quanto na deserialização.
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    // mappedBy = "course" para indicar a chave estrangeira
-    // Quando faz a consulta por um curso, ele traz as subconsultas que é os modules dos curso, então o
-    // fetch = FetchType.LAZY é para baixar as informações das subconsultas só quando necessário.
     @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
-    // Para fazer uma consulta para cada curso e uma consulta para todos os módulos relacionados a ele.
     @Fetch(FetchMode.SUBSELECT)
-    // é uma lista, pq pode ter mais de um modulo em cada curso, a diferença do Set<> para o List<>, é q o Set não
-    // aceita objeto duplicado, enquanto o List sim.
     private Set<ModuleModel> modules;
-
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
-    private Set<CourseUserModel> coursesUsers;
-
-    public CourseUserModel convertToCourseUserModel(UUID userId) {
-        return new CourseUserModel(null, this, userId);
-    }
 
 }

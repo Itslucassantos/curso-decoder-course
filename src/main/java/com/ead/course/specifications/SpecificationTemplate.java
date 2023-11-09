@@ -1,7 +1,7 @@
 package com.ead.course.specifications;
 
 import com.ead.course.models.CourseModel;
-import com.ead.course.models.CourseUserModel;
+import com.ead.course.models.UserModel;
 import com.ead.course.models.LessonModel;
 import com.ead.course.models.ModuleModel;
 import net.kaczmarzyk.spring.data.jpa.domain.Equal;
@@ -64,15 +64,6 @@ public class SpecificationTemplate {
             return criteriaBuilder.and(criteriaBuilder.equal(module.get("moduleId"), moduleId),
                     // para ver qual os lesson que fazer parte do moduleLessons
                     criteriaBuilder.isMember(lesson, moduleLessons));
-        };
-    }
-
-    public static Specification<CourseModel> courseUserId(final UUID userId) {
-        return (root, query, criteriaBuilder) -> {
-            query.distinct(true);
-            // "coursesUsers" é a Lista de set definido na CourseModel que tem relação com o CourseUserModel
-            Join<CourseModel, CourseUserModel> courseProd = root.join("coursesUsers");
-            return criteriaBuilder.equal(courseProd.get("userId"), userId);
         };
     }
 

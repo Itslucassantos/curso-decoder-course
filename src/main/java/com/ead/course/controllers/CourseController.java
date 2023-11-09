@@ -26,9 +26,6 @@ import java.util.UUID;
 @Log4j2
 @RestController
 @RequestMapping("/courses")
-// Ao adicionar @CrossOrigin(origins = "*", maxAge = 3600) a um método de controlador de API em Java, você está
-// permitindo que todas as origens acessem esse método, e as informações de origem serão armazenadas em cache pelo
-// navegador por 3600 segundos (1 hora).
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class CourseController {
 
@@ -92,10 +89,6 @@ public class CourseController {
                                                            @PageableDefault(page = 0, size = 10, sort = "courseId",
                                                                    direction = Sort.Direction.ASC) Pageable pageable,
                                                            @RequestParam(required = false) UUID userId) {
-        if (userId != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(this.courseService.findAll(SpecificationTemplate
-                    .courseUserId(userId).and(spec), pageable));
-        }
         return ResponseEntity.status(HttpStatus.OK).body(this.courseService.findAll(spec, pageable));
     }
 
