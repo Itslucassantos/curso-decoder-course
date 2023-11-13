@@ -60,4 +60,13 @@ public class CourseModel implements Serializable {
     @Fetch(FetchMode.SUBSELECT)
     private Set<ModuleModel> modules;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @ManyToMany(fetch = FetchType.LAZY)
+    // cria uma tabela intermediária onde tem o courseId e o userId.
+    @JoinTable( name = "tb_courses_users",
+            joinColumns = @JoinColumn(name = "course_id"),
+    // o inverse é o outro lado da relação, ou seja relaciona o userId da tabela User com a de Course.
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<UserModel> users;
+
 }

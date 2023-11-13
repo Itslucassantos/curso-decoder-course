@@ -27,7 +27,16 @@ public class SpecificationTemplate {
             // vai trazer todos.
             @Spec(path = "name", spec = Like.class)
     })
+
     public interface CourseSpec extends Specification<CourseModel> {}
+
+    @And({
+            @Spec(path = "email", spec = Like.class),
+            @Spec(path = "fullName", spec = Like.class),
+            @Spec(path = "userStatus", spec = Equal.class),
+            @Spec(path = "userType", spec = Equal.class)
+    })
+    public interface UserSpec extends Specification<UserModel> {}
 
     @Spec(path = "title", spec = Like.class)
     public interface ModuleSpec extends Specification<ModuleModel> {}
@@ -64,6 +73,29 @@ public class SpecificationTemplate {
             return criteriaBuilder.and(criteriaBuilder.equal(module.get("moduleId"), moduleId),
                     // para ver qual os lesson que fazer parte do moduleLessons
                     criteriaBuilder.isMember(lesson, moduleLessons));
+        };
+    }
+
+    public static Specification<UserModel> userCourseId(final UUID courseId) {
+        return (root, query, criteriaBuilder) -> {
+            query.distinct(true);
+            Root<UserModel> user = root; // definindo a entidade 1
+            Root<CourseModel> course = query.from(CourseModel.class); // definindo a entidade 2
+            Expression<Collection<UserModel>> coursesUsers = course.get("users");
+            return criteriaBuilder.and(criteriaBuilder.equal(course.get("courseId"), courseId),
+                    criteriaBuilder.isMember(user, coursesUsers));
+        };
+    }
+
+    // retorna um usuário.
+    public static Specification<CourseModel> courseUserId(final UUID userId) {
+        return (root, query, criteriaBuilder) -> {
+            query.distinct(true);
+            Root<CourseModel> course = root; // definindo a entidade 1
+            Root<UserModel> user = query.from(UserModel.class); // definindo a entidade 2
+            Expression<Collection<CourseModel>> usersCourses = user.get("courses");
+            return criteriaBuilder.and(criteriaBuilder.equal(user.get("userId"), userId),
+                    criteriaBuilder.isMember(course, usersCourses));
         };
     }
 
