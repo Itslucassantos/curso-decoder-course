@@ -23,6 +23,8 @@ spring:
   output:
     ansi:
       enabled: Always
+  rabbitmq:
+    addresses: amqps://jjrhjjqm:SElN_DfJmKmHH31-LRuMnjxaXuKgcvfC@puffin.rmq2.cloudamqp.com/jjrhjjqm
 
 ead:
   api:
