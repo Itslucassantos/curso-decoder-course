@@ -1,8 +1,7 @@
-server:
-  port: 8082
-  servlet:
-    context-path: '/ead-course/'
-
+#server:
+#  port: 8082
+#  servlet:
+#    context-path: '/ead-course/'
 spring:
   application:
     name: ead-course-service
@@ -12,51 +11,53 @@ spring:
     config:
       discovery:
         serviceId: ead-config-server
-  datasource:
-    url: 'jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:ead_course}'
-    username: ${DATABASE_USER:bemindersuser}
-    password: ${DATABASE_PASSWORD:beminders}
-  jpa:
-    hibernate:
-      # cria as tabelas no banco automaticamente
-      ddl-auto: update
-      dialect: org.hibernate.dialect.PostgreSQLDialect
-      jdbc:
-        lob.non-contextual-creation: true
-    properties:
-      hibernate:
-        show_sql: true
-  output:
-    ansi:
-      enabled: Always
-  rabbitmq:
-    addresses: amqps://jjrhjjqm:SElN_DfJmKmHH31-LRuMnjxaXuKgcvfC@puffin.rmq2.cloudamqp.com/jjrhjjqm
-
-ead:
-  api:
-    url:
-      authuser: 'http://ead-authuser-service/ead-authuser'
-  broker:
-    exchange:
-      userEventExchange: ead.userevent
-      notificationCommandExchange: ead.notificationcommand
-    queue:
-      userEventQueue:
-        name: ead.userevent.ms.course
-    key:
-      notificationCommandKey: ms.notification
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include:
-          - refresh
-          - health
-
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: 'http://localhost:8761/eureka'
-  instance:
-    hostname: localhost
+      username: configserver
+      password: 'ead123cs'
+#  datasource:
+#    url: 'jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:ead_course}'
+#    username: ${DATABASE_USER:bemindersuser}
+#    password: ${DATABASE_PASSWORD:beminders}
+#  jpa:
+#    hibernate:
+#      # cria as tabelas no banco automaticamente
+#      ddl-auto: update
+#      dialect: org.hibernate.dialect.PostgreSQLDialect
+#      jdbc:
+#        lob.non-contextual-creation: true
+#    properties:
+#      hibernate:
+#        show_sql: true
+#  output:
+#    ansi:
+#      enabled: Always
+#  rabbitmq:
+#    addresses: amqps://jjrhjjqm:SElN_DfJmKmHH31-LRuMnjxaXuKgcvfC@puffin.rmq2.cloudamqp.com/jjrhjjqm
+#
+#ead:
+#  api:
+#    url:
+#      authuser: 'http://ead-authuser-service/ead-authuser'
+#  broker:
+#    exchange:
+#      userEventExchange: ead.userevent
+#      notificationCommandExchange: ead.notificationcommand
+#    queue:
+#      userEventQueue:
+#        name: ead.userevent.ms.course
+#    key:
+#      notificationCommandKey: ms.notification
+#
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include:
+#          - refresh
+#          - health
+#
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: 'http://localhost:8761/eureka'
+#  instance:
+#    hostname: localhost
